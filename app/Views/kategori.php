@@ -40,6 +40,24 @@
     .badge-warning[href] {
         background-color: #c67605;
     }
+
+    .judulkonten {
+        background-color: #90d26d;
+        background-image: url("<?= base_url('judul.jpg') ?>");
+        padding: 40px 0px;
+        opacity: 0.5;
+        background-position: 0px -70.3185px;
+    }
+
+    .judulkonten h1 {
+        text-transform: uppercase;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15) !important;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #fff;
+        font-size: 40px;
+        font-weight: 600;
+        letter-spacing: 2px;
+    }
 </style>
 
 <body>
@@ -56,7 +74,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="<?= base_url('/') ?>">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= base_url('/LoginController/logout') ?>">Logout</a>
@@ -77,95 +95,18 @@
     </nav>
     <!-- Batas Navbar -->
 
-    <!-- Crousel Promo -->
-    <div class="container p-0" style="margin-top: 100px;">
-        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            </div>
-            <div class="carousel-inner" style="border-radius: 30px; width: 100%;">
-                <div class="carousel-item active">
-                    <img src="/image/Tokopedia1.jpg" class="d-block w-100" alt="...">
-                </div>
-                <div class="carousel-item">
-                    <img src="/image/Tokopedia2.jpg" class="d-block w-100" alt="...">
-                </div>
-                <div class="carousel-item">
-                    <img src="/image/Tokopedia3.jpg" class="d-block w-100" alt="...">
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+    <!-- judul -->
+    <div class="container-fluid judulkonten" style="margin-top: 70px;">
+        <div class="container-xl">
+            <h1><?= $kategori ?></h1>
         </div>
     </div>
-    <!-- Batas Carousel -->
-
-    <!-- Kategori -->
-    <div class="container px-0 pt-0 border-bottom">
-        <div class="container px-3 pt-4 pb-5" style="margin-top: 20px; border-radius: 30px;">
-            <h2 style="text-align: center;">Kategori</h2>
-            <div class="row my-3 justify-content-center">
-                <div class="col-3 d-flex justify-content-center py-3" style="width: fit-content;">
-                    <a href="<?= base_url('KategoriController/index?kategori=mainan') ?>" style="text-decoration: none;" class="text-muted">
-                        <div class=" card pt-4 px-4 pb-2" style="width: 100%;">
-                            <img src="/image/Mainan.png" class="card-img-top mt-2" alt="..." width="100px" height="100px" style="object-fit: contain;">
-                            <div class="card-body" style="text-align: center;">
-                                <h5>Mainan</h5>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-3 d-flex justify-content-center py-3" style="width: fit-content;">
-                    <a href="<?= base_url('KategoriController/index?kategori=perabotan') ?>" style="text-decoration: none;" class="text-muted">
-                        <div class="card pt-4 px-4 pb-2" style="width: 100%;">
-                            <img src="/image/Lemari.png" class="card-img-top mt-2" alt="..." width="100px" height="100px" style="object-fit: contain;">
-                            <div class="card-body" style="text-align: center;">
-                                <h5>Perabotan</h5>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-3 d-flex justify-content-center py-3" style="width: fit-content;">
-                    <a href="<?= base_url('KategoriController/index?kategori=buku') ?>" style="text-decoration: none;" class="text-muted">
-                        <div class="card pt-4 px-4 pb-2" style="width: 100%;">
-                            <img src="/image/Buku2.png" class="card-img-top mt-2" alt="..." width="100px" height="100px" style="object-fit: contain;">
-                            <div class="card-body" style="text-align: center;">
-                                <h5>Buku</h5>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-3 d-flex justify-content-center py-3" style="width: fit-content;">
-                    <a href="<?= base_url('KategoriController/index?kategori=pakaian') ?>" style="text-decoration: none;" class="text-muted">
-                        <div class="card pt-4 px-4 pb-2" style="width: 100%;">
-                            <img src="/image/Pakaian.png" class="card-img-top mt-2" alt="..." width="100px" height="100px" style="object-fit: contain;">
-                            <div class="card-body" style="text-align: center;">
-                                <h5>Pakaian</h5>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Batas Kategori -->
+    <!-- batas judul -->
 
     <!-- List Barang -->
     <div class="container mt-4">
         <div class="row">
-            <?php
-
-            use App\Controllers\HomeController;
-
-            foreach ($barang as $barang) { ?>
+            <?php foreach ($barang as $barang) { ?>
                 <div class="col-2 mt-4 d-flex">
                     <div class="card flex-fill" style="width: 100%">
                         <img src="<?= base_url('image/' . $barang['foto']) ?>" class="card-img-top" height="150px" alt="...">

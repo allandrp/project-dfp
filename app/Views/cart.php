@@ -80,7 +80,7 @@
             <div class="col-6">
                 <?php foreach ($cart as $c) { ?>
                     <div class="card mt-3">
-                        <img src="/image/Mainan.png" class="card-img-top" alt="gambar produk">
+                        <img src="<?= base_url('image/' . $c['foto']) ?>" class="card-img-top" style="max-height: 200px; object-fit: contain;" alt="gambar produk">
                         <div class="card-body">
                             <h5><?= $c['nama_barang'] ?></h5>
                             <p class="card-text" style="font-weight: bold; color:var(--Y500,#FA591D); margin-top: 0px;" id="hargasatuan">Rp. <?= number_format($c['total_harga'] / $c['jumlah_barang']) ?></p>
