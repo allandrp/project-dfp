@@ -4,6 +4,17 @@ namespace App\Controllers;
 
 use App\Models\BarangModel;
 use App\Models\CartModel;
+use App\Models\DetailPembelianModel;
+use App\Models\PembelianModel;
+
+// Set your Merchant Server Key
+\Midtrans\Config::$serverKey = 'SB-Mid-server-TrtH9rgau3tx06BkSe5WGNf1';
+// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+\Midtrans\Config::$isProduction = false;
+// Set sanitization on (default)
+\Midtrans\Config::$isSanitized = true;
+// Set 3DS transaction for credit card to true
+\Midtrans\Config::$is3ds = false;
 
 class CartController extends BaseController
 {
@@ -134,12 +145,53 @@ class CartController extends BaseController
 
         // mengambil data total harga keseluruhan user
         $total_harga = $ModelCart->selectSum('total_harga')->where('kart.email', $session->get('email'))->first();
+        // $cartbaru = $ModelCart->select('*')->join('barang', 'barang.id_barang = kart.id_barang')->where('kart.email', $session->get('email'))->findAll();
 
         $data = array();
         $data['jumlah_barang'] = $jumlah_barang['jumlah_barang'];
         $data['jumlah_barang_satuan'] = $jumlah_barang_satuan['jumlah_barang'];
         $data['total_harga'] = $total_harga['total_harga'];
+        // $data['cart_baru'] = $cartbaru;
 
         return json_encode($data);
+    }
+
+    public function resetCart()
+    {
+        $session = session();
+
+        $ModelPembelian = new PembelianModel();
+        $ModelCart = new CartModel();
+        $ModelDetail = new DetailPembelianModel();
+
+        $status = \Midtrans\Transaction::status($this->request->getVar('order_id'));
+
+        $jumlah_barang = $ModelCart->selectSum('jumlah_barang')->where('kart.email', $session->get('email'))->first();
+        $total_harga = $ModelCart->selectSum('total_harga')->where('kart.email', $session->get('email'))->first();
+        $cart = $ModelCart->select('*')->join('barang', 'barang.id_barang = kart.id_barang')->where('kart.email', $session->get('email'))->findAll();
+
+
+
+        $ModelPembelian->insert([
+            'id_pembelian' => $this->request->getVar('order_id'),
+            'email' => $session->get('email'),
+            'tanggal_pembelian' => $status->transaction_time,
+            'jumlah_barang' => $jumlah_barang['jumlah_barang'],
+            'total_pembelian' => $total_harga['total_harga'],
+            'status_pembelian' => $status->transaction_status
+        ]);
+
+        foreach ($cart as $cart) {
+            $ModelDetail->insert([
+                'id_pembelian' => $this->request->getVar('order_id'),
+                'nama_barang' => $cart['nama_barang'],
+                'jumlah_barang' => $cart['jumlah_barang'],
+                'harga' => $cart['harga']
+            ]);
+        }
+
+        $ModelCart->where('email', $session->get('email'));
+        $ModelCart->delete();
+        return redirect()->to(base_url('PembelianController/index'));
     }
 }

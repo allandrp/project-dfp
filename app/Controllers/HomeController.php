@@ -35,6 +35,7 @@ class HomeController extends BaseController
         }
         $data['barang'] = $barang;
         $data['jumlah_barang'] = $jumlah_barang;
+
         return view('home', $data);
     }
 

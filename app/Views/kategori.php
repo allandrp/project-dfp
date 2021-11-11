@@ -74,7 +74,10 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?= base_url('/') ?>">Home</a>
+                        <a class="nav-link active" aria-current="page" href="<?= base_url('/HomeController') ?>">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= base_url('/PembelianController/index') ?>">History</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= base_url('/LoginController/logout') ?>">Logout</a>
@@ -82,7 +85,14 @@
                     <li class="nav-item">
                         <a href="<?= base_url('CartController/index') ?>">
                             <i class="fa mt-2" style="font-size:24px">&#xf07a;</i>
-                            <span class='badge badge-warning' id='lblCartCount'> <?= $jumlah_barang ?> </span>
+                            <span class='badge badge-warning' id='lblCartCount'> <?php
+                                                                                    if ($jumlah_barang != null) {
+                                                                                        echo $jumlah_barang['jumlah_barang'];
+                                                                                    } else {
+                                                                                        echo 0;
+                                                                                    }
+
+                                                                                    ?> </span>
                         </a>
                     </li>
                 </ul>

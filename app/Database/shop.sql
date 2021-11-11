@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 09, 2021 at 10:14 AM
+-- Generation Time: Nov 10, 2021 at 07:33 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.10
 
@@ -58,6 +58,27 @@ INSERT INTO `barang` (`id_barang`, `nama_barang`, `harga`, `kategori`, `lokasi`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `detail_pembelian`
+--
+
+CREATE TABLE `detail_pembelian` (
+  `id_pembelian` varchar(100) NOT NULL,
+  `nama_barang` varchar(100) NOT NULL,
+  `jumlah_barang` int(11) NOT NULL,
+  `harga` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `detail_pembelian`
+--
+
+INSERT INTO `detail_pembelian` (`id_pembelian`, `nama_barang`, `jumlah_barang`, `harga`) VALUES
+('105029886', 'Komik Naruto', 2, 75000),
+('105029886', 'Seragam Lengan Panjang', 1, 150000);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `kart`
 --
 
@@ -74,9 +95,8 @@ CREATE TABLE `kart` (
 --
 
 INSERT INTO `kart` (`id_kart`, `email`, `id_barang`, `jumlah_barang`, `total_harga`) VALUES
-(11, 'alland@gmail.com', 1, 1, 75000),
 (24, 'admin@gmail.com', 1, 1, 75000),
-(25, 'alland@gmail.com', 2, 1, 150000);
+(1237, 'alland@gmail.com', 2, 1, 150000);
 
 -- --------------------------------------------------------
 
@@ -100,6 +120,28 @@ CREATE TABLE `migrations` (
 
 INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`, `batch`) VALUES
 (1, '2021-11-05-150958', 'App\\Database\\Migrations\\Barang', 'default', 'App', 1636125279, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pembelian`
+--
+
+CREATE TABLE `pembelian` (
+  `id_pembelian` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `tanggal_pembelian` datetime NOT NULL,
+  `jumlah_barang` int(11) NOT NULL,
+  `total_pembelian` int(11) NOT NULL,
+  `status_pembelian` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `pembelian`
+--
+
+INSERT INTO `pembelian` (`id_pembelian`, `email`, `tanggal_pembelian`, `jumlah_barang`, `total_pembelian`, `status_pembelian`) VALUES
+('105029886', 'alland@gmail.com', '2021-11-10 23:48:48', 3, 300000, 'pending');
 
 -- --------------------------------------------------------
 
@@ -133,16 +175,31 @@ ALTER TABLE `barang`
   ADD PRIMARY KEY (`id_barang`);
 
 --
+-- Indexes for table `detail_pembelian`
+--
+ALTER TABLE `detail_pembelian`
+  ADD PRIMARY KEY (`id_pembelian`,`nama_barang`);
+
+--
 -- Indexes for table `kart`
 --
 ALTER TABLE `kart`
-  ADD PRIMARY KEY (`id_kart`);
+  ADD PRIMARY KEY (`id_kart`),
+  ADD KEY `id_barang` (`id_barang`),
+  ADD KEY `email` (`email`);
 
 --
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pembelian`
+--
+ALTER TABLE `pembelian`
+  ADD PRIMARY KEY (`id_pembelian`),
+  ADD KEY `email` (`email`);
 
 --
 -- Indexes for table `user`
@@ -164,13 +221,38 @@ ALTER TABLE `barang`
 -- AUTO_INCREMENT for table `kart`
 --
 ALTER TABLE `kart`
-  MODIFY `id_kart` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id_kart` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1238;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `detail_pembelian`
+--
+ALTER TABLE `detail_pembelian`
+  ADD CONSTRAINT `detail_pembelian_ibfk_1` FOREIGN KEY (`id_pembelian`) REFERENCES `pembelian` (`id_pembelian`) ON DELETE CASCADE,
+  ADD CONSTRAINT `detail_pembelian_ibfk_2` FOREIGN KEY (`id_pembelian`) REFERENCES `pembelian` (`id_pembelian`) ON DELETE CASCADE,
+  ADD CONSTRAINT `detail_pembelian_ibfk_3` FOREIGN KEY (`id_pembelian`) REFERENCES `pembelian` (`id_pembelian`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `kart`
+--
+ALTER TABLE `kart`
+  ADD CONSTRAINT `kart_ibfk_1` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`) ON DELETE CASCADE,
+  ADD CONSTRAINT `kart_ibfk_2` FOREIGN KEY (`email`) REFERENCES `user` (`email`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `pembelian`
+--
+ALTER TABLE `pembelian`
+  ADD CONSTRAINT `pembelian_ibfk_1` FOREIGN KEY (`email`) REFERENCES `user` (`email`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

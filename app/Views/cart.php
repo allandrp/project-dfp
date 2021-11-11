@@ -1,3 +1,13 @@
+<?php
+// Set your Merchant Server Key
+\Midtrans\Config::$serverKey = 'SB-Mid-server-TrtH9rgau3tx06BkSe5WGNf1';
+// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+\Midtrans\Config::$isProduction = false;
+// Set sanitization on (default)
+\Midtrans\Config::$isSanitized = true;
+// Set 3DS transaction for credit card to true
+\Midtrans\Config::$is3ds = false;
+?>
 <!doctype html>
 <html lang="en">
 
@@ -10,6 +20,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/3b9659dcfe.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-X1vwHcptrPNqfmbA"></script>
+    <script src="<?= base_url('js/number.js') ?>"></script>
     <title>Hello, world!</title>
 </head>
 <style>
@@ -57,12 +69,23 @@
                         <a class="nav-link active" aria-current="page" href="<?= base_url('/HomeController') ?>">Home</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="<?= base_url('/PembelianController/index') ?>">History</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="<?= base_url('/LoginController/logout') ?>">Logout</a>
                     </li>
                     <li class="nav-item">
                         <a href="">
                             <i class="fa mt-2" style="font-size:24px">&#xf07a;</i>
-                            <span class='badge badge-warning' id='labeltotalbarang1'><?= $jumlah_barang['jumlah_barang'] ?></span>
+                            <span class='badge badge-warning' id='labeltotalbarang1'>
+                                <?php
+                                if ($cart != null) {
+                                    echo $jumlah_barang['jumlah_barang'];
+                                } else {
+                                    echo 0;
+                                }
+
+                                ?></span>
                         </a>
                     </li>
                 </ul>
@@ -78,7 +101,10 @@
     <div class="container border p-4" style="margin-top: 100px;">
         <div class="row">
             <div class="col-6">
-                <?php foreach ($cart as $c) { ?>
+                <?php
+                $cart2 = array();
+                foreach ($cart as $c) {
+                    $cart2[] = $c; ?>
                     <div class="card mt-3">
                         <img src="<?= base_url('image/' . $c['foto']) ?>" class="card-img-top" style="max-height: 200px; object-fit: contain;" alt="gambar produk">
                         <div class="card-body">
@@ -119,9 +145,7 @@
                                         document.getElementById("totalhargasemua").innerHTML = "Rp." + number_format(data['total_harga']);
                                         document.getElementById("totalhargasemua2").innerHTML = "Rp." + number_format(data['total_harga']);
 
-                                        if (data['jumlah_barang_satuan'] == null) {
-                                            location.reload();
-                                        }
+                                        location.reload();
 
                                     }
                                 });
@@ -144,41 +168,12 @@
                                         document.getElementById("totalhargasemua").innerHTML = "Rp." + number_format(data['total_harga']);
                                         document.getElementById("totalhargasemua2").innerHTML = "Rp." + number_format(data['total_harga']);
 
-                                        if (data['jumlah_barang_satuan'] == null) {
-                                            location.reload();
-                                        }
+                                        location.reload();
 
                                     }
                                 });
                             });
                         });
-
-                        function number_format(number, decimals, decPoint, thousandsSep) {
-                            number = (number + '').replace(/[^0-9+\-Ee.]/g, '')
-                            var n = !isFinite(+number) ? 0 : +number
-                            var prec = !isFinite(+decimals) ? 0 : Math.abs(decimals)
-                            var sep = (typeof thousandsSep === 'undefined') ? ',' : thousandsSep
-                            var dec = (typeof decPoint === 'undefined') ? '.' : decPoint
-                            var s = ''
-
-                            var toFixedFix = function(n, prec) {
-                                var k = Math.pow(10, prec)
-                                return '' + (Math.round(n * k) / k)
-                                    .toFixed(prec)
-                            }
-
-                            // @todo: for IE parseFloat(0.55).toFixed(0) = 0;
-                            s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.')
-                            if (s[0].length > 3) {
-                                s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep)
-                            }
-                            if ((s[1] || '').length < prec) {
-                                s[1] = s[1] || ''
-                                s[1] += new Array(prec - s[1].length + 1).join('0')
-                            }
-
-                            return s.join(dec)
-                        }
                     </script>
                 <?php } ?>
             </div>
@@ -199,14 +194,89 @@
                                 <div class="row pt-3">
                                     <div class="col-6">Total Harga </div>
                                     <div class="col-6 text-end" id="totalhargasemua2">Rp. <?= number_format($total_harga['total_harga']) ?></div>
+                                    <input type="hidden" value="<?= $total_harga['total_harga'] ?>">
                                 </div>
                                 <div class="d-grid gap-2">
                                     <button type="button" class="btn btn-outline-success mt-5" id="tombolbeli" style="font-weight: bold;">Beli (<?= $jumlah_barang['jumlah_barang'] ?>)</button>
+
+                                    <!-- midtrans -->
+                                    <?php
+                                    $session = session();
+                                    $time = time();
+
+                                    if ($cart != null) {
+
+                                        // set batas kadaluarsa transaksi
+                                        $custom_expiry = array(
+                                            'start_time' => date("Y-m-d H:i:s O", $time),
+                                            'unit' => 'day',
+                                            'duration' => '1'
+                                        );
+
+                                        $transaction_details = array(
+                                            'order_id' => rand(),
+                                            'gross_amount' => $total_harga,
+                                        );
+
+                                        $customer_details = array(
+                                            'first_name'       => $session->get('nama'),
+                                            'last_name'        => "",
+                                            'email'            => $session->get('email'),
+                                            'phone'            => "",
+                                            'billing_address'  => $session->get('alamat'),
+                                            'shipping_address' => $session->get('alamat')
+                                        );
+                                        $count = 0;
+                                        $items = array();
+                                        foreach ($cart2 as $c) {
+                                            $itemtemp =  array(
+                                                'id'       => $c['id_barang'],
+                                                'price'    => $c['harga'],
+                                                'quantity' => $c['jumlah_barang'],
+                                                'name'     => $c['nama_barang']
+                                            );
+
+                                            $items[$count] = $itemtemp;
+                                            $count = $count + 1;
+                                        }
+                                        $transaction_data = array(
+                                            'transaction_details' => $transaction_details,
+                                            'item_details'        => $items,
+                                            'customer_details'    => $customer_details,
+                                            'expiry' => $custom_expiry
+
+                                        );
+                                        $snapToken = \Midtrans\Snap::getSnapToken($transaction_data);
+                                    ?>
+                                        <script>
+                                            document.getElementById('tombolbeli').onclick = function() {
+                                                // SnapToken acquired from previous step
+                                                snap.pay('<?= $snapToken ?>', {
+                                                    // Optional
+                                                    onSuccess: function(result) {
+                                                        /* You may add your own js here, this is just example */
+                                                        window.location = "http://localhost:8080/cartController/resetCart?order_id=" + result['order_id'];
+                                                    },
+                                                    // Optional
+                                                    onPending: function(result) {
+                                                        /* You may add your own js here, this is just example */
+                                                        // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                                                        window.location = "http://localhost:8080/cartController/resetCart?order_id=" + result['order_id'];
+                                                    },
+                                                    // Optional
+                                                    onError: function(result) {
+                                                        /* You may add your own js here, this is just example */
+                                                    }
+                                                });
+                                            };
+                                        </script>
+                                    <?php } ?>
+                                    <!-- batas akhir midtrans -->
+
                                 </div>
                             </h5>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
