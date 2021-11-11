@@ -4,7 +4,9 @@
 
 1. Clone Repository
 2. Lakukan Instalasi Composer
-   `$ composer install`
+   ```
+   $ composer install
+   ```
 
 ## Installation & updates
 
