@@ -105,21 +105,28 @@
                 $cart2 = array();
                 foreach ($cart as $c) {
                     $cart2[] = $c; ?>
-                    <div class="card mt-3">
-                        <img src="<?= base_url('image/' . $c['foto']) ?>" class="card-img-top" style="max-height: 200px; object-fit: contain;" alt="gambar produk">
-                        <div class="card-body">
-                            <h5><?= $c['nama_barang'] ?></h5>
-                            <p class="card-text" style="font-weight: bold; color:var(--Y500,#FA591D); margin-top: 0px;" id="hargasatuan">Rp. <?= number_format($c['total_harga'] / $c['jumlah_barang']) ?></p>
-                            <div class="row">
-                                <div class="col-4">
+                    <!-- card foto samping -->
+                    <div class="card mb-3" style="max-width: 540px;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="<?= base_url('image/' . $c['foto']) ?>" class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5><?= $c['nama_barang'] ?></h5>
+                                    <p class="card-text" style="font-weight: bold; color:var(--Y500,#FA591D); margin-top: 0px;" id="hargasatuan">Rp. <?= number_format($c['total_harga'] / $c['jumlah_barang']) ?></p>
                                     <div class="row">
                                         <div class="col-4">
-                                            <button type="button" class="mt-2 btn btn-outline-success" id="minus<?= $c['id_barang'] ?>"><i class="fas fa-minus"></i></button>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <button type="button" class="mt-2 btn btn-outline-success" id="minus<?= $c['id_barang'] ?>"><i class="fas fa-minus"></i></button>
+                                                </div>
+                                                <div class="col-4 pt-3 ps-4">
+                                                    <h5 class="card-subtitle mb-2 text-muted" id="jumlahbarang<?= $c['id_barang'] ?>"><?= $c['jumlah_barang'] ?></h5>
+                                                </div>
+                                                <div class="col-4"><button type="button" class="mt-2 btn btn-outline-success" id="plus<?= $c['id_barang'] ?>"><i class="fas fa-plus"></i></button></div>
+                                            </div>
                                         </div>
-                                        <div class="col-4 pt-3 ps-4">
-                                            <h5 class="card-subtitle mb-2 text-muted" id="jumlahbarang<?= $c['id_barang'] ?>"><?= $c['jumlah_barang'] ?></h5>
-                                        </div>
-                                        <div class="col-4"><button type="button" class="mt-2 btn btn-outline-success" id="plus<?= $c['id_barang'] ?>"><i class="fas fa-plus"></i></button></div>
                                     </div>
                                 </div>
                             </div>
