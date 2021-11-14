@@ -1,4 +1,4 @@
-# Template Online Shop Sederhana Dengan CodeIgniter 4
+# Online Shop Sederhana Dengan CodeIgniter 4
 
 ## Instalasi
 
@@ -26,7 +26,5 @@
 5. Nyalakan Server dengan perintah berikut :
 
    ```
-
    $ php spark serve
-
    ```
